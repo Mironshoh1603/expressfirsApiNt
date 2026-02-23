@@ -79,5 +79,11 @@
     "username": "Ali",
     "password": "123456789",
     "email": "mironshox1604@gmqail.com"
+  },
+  {
+    "id": 16,
+    "username": "nimadur",
+    "password": "12345678",
+    "email": "abdyu@gmail.com"
   }
 ]

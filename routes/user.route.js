@@ -1,6 +1,12 @@
 import { Router } from "express";
 import fs from "fs";
-import { registerController } from "../controllers/user.controller.js";
+import {
+  loginController,
+  registerController,
+  allUsersController,
+  GetUserByUsername,
+} from "../controllers/user.controller.js";
+import checkBasicAuth from "../middlewares/basic.middleware.js";
 
 let router = new Router();
 // router.get("/", (req, res) => {
@@ -8,4 +14,8 @@ let router = new Router();
 // });
 
 router.post("/register", registerController);
+router.post("/login", loginController);
+router.get("/", checkBasicAuth, allUsersController);
+
+router.get("/:username", checkBasicAuth, GetUserByUsername);
 export default router;

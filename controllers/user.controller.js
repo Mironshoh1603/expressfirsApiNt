@@ -30,4 +30,53 @@ let registerController = (req, res, next) => {
   }
 };
 
-export { registerController };
+let loginController = (req, res, next) => {
+  try {
+    // let { a, b } = { a: 3, b: 6 };
+    let { username, password } = req.body;
+    if (!(username && password))
+      throw new Error("username yoki password kelmadi");
+
+    let user = readFileUsers().find((val) => val.username === username);
+    if (!user) throw new Error("Bunaaqa usernameli foydalanuvchi yo'q");
+
+    if (!(user.password == password)) throw new Error("Parol xato");
+    delete user.password;
+    return res.status(200).json({
+      status: "Success",
+      message: "Login succelfully",
+      data: user,
+    });
+  } catch (error) {
+    throw error;
+  }
+};
+
+let allUsersController = (req, res, next) => {
+  try {
+    let users = readFileUsers();
+    return res.status(200).json({
+      status: "Success",
+      message: "Barcha userlar",
+      data: users,
+    });
+  } catch (error) {
+    throw error;
+  }
+};
+
+let GetUserByUsername = (req, res, next) => {
+  let user = readFileUsers().find((val) => val.username == req.params.username);
+  if (!user) throw new Error("Bunaqa user mavjud emas!!");
+  return res.status(200).json({
+    status: "Success",
+    message: "User Found",
+    data: user,
+  });
+};
+export {
+  registerController,
+  loginController,
+  allUsersController,
+  GetUserByUsername,
+};
