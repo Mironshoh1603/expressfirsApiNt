@@ -56,10 +56,13 @@ let loginController = (req, res, next) => {
 let allUsersController = (req, res, next) => {
   try {
     let users = readFileUsers();
+    let page = req.query.page || 1;
+    let limit = req.query.limit || 1;
     return res.status(200).json({
       status: "Success",
       message: "Barcha userlar",
-      data: users,
+      page,
+      data: users.splice((page - 1) * limit, limit),
     });
   } catch (error) {
     throw error;
@@ -83,6 +86,8 @@ let createUserController = (req, res, next) => {
     if (!username) throw new AppError(400, "Username berilmagan");
     if (!password) throw new AppError(401, "password berilmagan");
     if (!email) throw new AppError(402, "email berilmagan");
+    let sameEmail = users.find((us) => us.email === email);
+    if (sameEmail) throw new AppError(400, "Bu email ishlatilgan");
     let user = {
       id: users.length + 1,
       username,
