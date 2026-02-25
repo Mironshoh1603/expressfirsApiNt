@@ -4,6 +4,7 @@ import bodyParser from "body-parser";
 
 import carRouter from "./routes/car.route.js";
 import userRouter from "./routes/user.route.js";
+import errorHandler from "./middlewares/errror.middleware.js";
 const app = express();
 
 app.use(bodyParser.json());
@@ -17,15 +18,6 @@ app.use((req, res, next) => {
 app.use("/api/v1/cars", carRouter);
 app.use("/api/v1/users", userRouter);
 
-app.use((err, req, res, next) => {
-  console.log(process.env.NODE_ENV);
-  let isDev = process.env.NODE_ENV === "DEVELOPMENT";
-  // res.status(404).send(`Error texti : ${err.message}`);
-  res.status(404).json({
-    status: "Failed",
-    message: err.message,
-    ...(isDev && { stack: err.stack }),
-  });
-});
+app.use(errorHandler);
 
 export default app;

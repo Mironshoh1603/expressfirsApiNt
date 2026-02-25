@@ -1,3 +1,4 @@
+import AppError from "../utils/app.error.js";
 import { readFileUsers, writeFileUsers } from "../utils/user.file.js";
 
 let registerController = (req, res, next) => {
@@ -74,9 +75,36 @@ let GetUserByUsername = (req, res, next) => {
     data: user,
   });
 };
+
+let createUserController = (req, res, next) => {
+  try {
+    let users = readFileUsers();
+    let { username, password, email } = req.body;
+    if (!username) throw new AppError(400, "Username berilmagan");
+    if (!password) throw new AppError(401, "password berilmagan");
+    if (!email) throw new AppError(402, "email berilmagan");
+    let user = {
+      id: users.length + 1,
+      username,
+      password,
+      email,
+    };
+    users.push(user);
+    writeFileUsers(users);
+    delete user.password;
+    return res.status(200).json({
+      status: "Success",
+      message: "User Found",
+      data: user,
+    });
+  } catch (error) {
+    next(error);
+  }
+};
 export {
   registerController,
   loginController,
   allUsersController,
+  createUserController,
   GetUserByUsername,
 };
